@@ -1,15 +1,18 @@
-import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import { createRootRouteWithContext, Outlet } from '@tanstack/react-router';
+import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 
-export const Route = createRootRoute({
+import { Header } from '../components/Header';
+import { Slider } from '../components/Slider';
+
+interface MyRouterContext {
+  auth: boolean;
+}
+
+export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: () => (
     <>
-      <div>
-        <Link to='/'>Home</Link>
-        <Link to='/signin'>Sign In</Link>
-        <Link to='/signout'>Sign Out</Link>
-      </div>
-      <hr />
+      <Header />
+      <Slider />
       <Outlet />
       <TanStackRouterDevtools />
     </>

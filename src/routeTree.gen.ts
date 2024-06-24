@@ -13,34 +13,58 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as TaskTaskIdImport } from './routes/task.$taskId'
+import { Route as TasksImport } from './routes/tasks'
+import { Route as MydayImport } from './routes/myday'
+import { Route as IndexImport } from './routes/index'
+import { Route as TasksIdImport } from './routes/tasks.id'
+import { Route as TasksTaskIdImport } from './routes/tasks.$taskId'
+import { Route as TasksIdTaskIdImport } from './routes/tasks.id.$taskId'
 
 // Create Virtual Routes
 
-const SignoutLazyImport = createFileRoute('/signout')()
+const SignupLazyImport = createFileRoute('/signup')()
 const SigninLazyImport = createFileRoute('/signin')()
-const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
 
-const SignoutLazyRoute = SignoutLazyImport.update({
-  path: '/signout',
+const SignupLazyRoute = SignupLazyImport.update({
+  path: '/signup',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/signout.lazy').then((d) => d.Route))
+} as any).lazy(() => import('./routes/signup.lazy').then((d) => d.Route))
 
 const SigninLazyRoute = SigninLazyImport.update({
   path: '/signin',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/signin.lazy').then((d) => d.Route))
 
-const IndexLazyRoute = IndexLazyImport.update({
+const TasksRoute = TasksImport.update({
+  path: '/tasks',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const MydayRoute = MydayImport.update({
+  path: '/myday',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const IndexRoute = IndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+} as any)
 
-const TaskTaskIdRoute = TaskTaskIdImport.update({
-  path: '/task/$taskId',
-  getParentRoute: () => rootRoute,
+const TasksIdRoute = TasksIdImport.update({
+  path: '/id',
+  getParentRoute: () => TasksRoute,
+} as any)
+
+const TasksTaskIdRoute = TasksTaskIdImport.update({
+  path: '/$taskId',
+  getParentRoute: () => TasksRoute,
+} as any)
+
+const TasksIdTaskIdRoute = TasksIdTaskIdImport.update({
+  path: '/$taskId',
+  getParentRoute: () => TasksIdRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -51,7 +75,21 @@ declare module '@tanstack/react-router' {
       id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexLazyImport
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/myday': {
+      id: '/myday'
+      path: '/myday'
+      fullPath: '/myday'
+      preLoaderRoute: typeof MydayImport
+      parentRoute: typeof rootRoute
+    }
+    '/tasks': {
+      id: '/tasks'
+      path: '/tasks'
+      fullPath: '/tasks'
+      preLoaderRoute: typeof TasksImport
       parentRoute: typeof rootRoute
     }
     '/signin': {
@@ -61,19 +99,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SigninLazyImport
       parentRoute: typeof rootRoute
     }
-    '/signout': {
-      id: '/signout'
-      path: '/signout'
-      fullPath: '/signout'
-      preLoaderRoute: typeof SignoutLazyImport
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupLazyImport
       parentRoute: typeof rootRoute
     }
-    '/task/$taskId': {
-      id: '/task/$taskId'
-      path: '/task/$taskId'
-      fullPath: '/task/$taskId'
-      preLoaderRoute: typeof TaskTaskIdImport
-      parentRoute: typeof rootRoute
+    '/tasks/$taskId': {
+      id: '/tasks/$taskId'
+      path: '/$taskId'
+      fullPath: '/tasks/$taskId'
+      preLoaderRoute: typeof TasksTaskIdImport
+      parentRoute: typeof TasksImport
+    }
+    '/tasks/id': {
+      id: '/tasks/id'
+      path: '/id'
+      fullPath: '/tasks/id'
+      preLoaderRoute: typeof TasksIdImport
+      parentRoute: typeof TasksImport
+    }
+    '/tasks/id/$taskId': {
+      id: '/tasks/id/$taskId'
+      path: '/$taskId'
+      fullPath: '/tasks/id/$taskId'
+      preLoaderRoute: typeof TasksIdTaskIdImport
+      parentRoute: typeof TasksIdImport
     }
   }
 }
@@ -81,10 +133,14 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren({
-  IndexLazyRoute,
+  IndexRoute,
+  MydayRoute,
+  TasksRoute: TasksRoute.addChildren({
+    TasksTaskIdRoute,
+    TasksIdRoute: TasksIdRoute.addChildren({ TasksIdTaskIdRoute }),
+  }),
   SigninLazyRoute,
-  SignoutLazyRoute,
-  TaskTaskIdRoute,
+  SignupLazyRoute,
 })
 
 /* prettier-ignore-end */
@@ -96,22 +152,45 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/myday",
+        "/tasks",
         "/signin",
-        "/signout",
-        "/task/$taskId"
+        "/signup"
       ]
     },
     "/": {
-      "filePath": "index.lazy.tsx"
+      "filePath": "index.tsx"
+    },
+    "/myday": {
+      "filePath": "myday.tsx"
+    },
+    "/tasks": {
+      "filePath": "tasks.tsx",
+      "children": [
+        "/tasks/$taskId",
+        "/tasks/id"
+      ]
     },
     "/signin": {
       "filePath": "signin.lazy.tsx"
     },
-    "/signout": {
-      "filePath": "signout.lazy.tsx"
+    "/signup": {
+      "filePath": "signup.lazy.tsx"
     },
-    "/task/$taskId": {
-      "filePath": "task.$taskId.tsx"
+    "/tasks/$taskId": {
+      "filePath": "tasks.$taskId.tsx",
+      "parent": "/tasks"
+    },
+    "/tasks/id": {
+      "filePath": "tasks.id.tsx",
+      "parent": "/tasks",
+      "children": [
+        "/tasks/id/$taskId"
+      ]
+    },
+    "/tasks/id/$taskId": {
+      "filePath": "tasks.id.$taskId.tsx",
+      "parent": "/tasks/id"
     }
   }
 }
