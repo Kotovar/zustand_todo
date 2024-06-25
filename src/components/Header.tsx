@@ -1,19 +1,23 @@
 import { Link } from '@tanstack/react-router';
 
-const auth = true;
+interface Props {
+  isAuthenticating: boolean;
+  logout: () => void;
+}
 
-export const Header = () =>
-  auth ? (
-    <header>
-      <nav>
-        <button>Sign Out</button>
-      </nav>
-    </header>
+export const Header = ({ isAuthenticating, logout }: Props) => {
+  const container = isAuthenticating ? (
+    <button onClick={logout}>Sign Out</button>
   ) : (
+    <>
+      <Link to='/signin'>Sign In</Link>
+      <Link to='/signup'>Sign Up</Link>
+    </>
+  );
+
+  return (
     <header>
-      <nav>
-        <Link to='/signin'>Sign In</Link>
-        <Link to='/signup'>Sign Up</Link>
-      </nav>
+      <nav>{container}</nav>
     </header>
   );
+};

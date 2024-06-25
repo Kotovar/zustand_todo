@@ -5,7 +5,7 @@ import { MyDay } from '../pages/Myday';
 export const Route = createFileRoute('/myday')({
   component: MyDay,
   beforeLoad: async ({ context }) => {
-    if (!context.auth) {
+    if (!context.isAuthenticating) {
       throw redirect({
         to: '/signin',
       });
