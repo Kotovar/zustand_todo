@@ -12,7 +12,7 @@ declare module '@tanstack/react-router' {
 export const router = createRouter({
   routeTree,
   context: {
-    auth: undefined,
+    isAuthenticating: undefined,
   },
   defaultNotFoundComponent: () => {
     return <NotFoundRoute />;

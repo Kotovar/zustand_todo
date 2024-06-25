@@ -1,12 +1,15 @@
+import './styles/reset.css';
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+
 import { RouterProvider } from '@tanstack/react-router';
 
 import { router } from './router';
-
-function InnerApp() {
-  const auth = true;
-  return <RouterProvider router={router} context={{ auth }} />;
-}
+import { useStore } from './store/store';
 
 export function App() {
-  return <InnerApp />;
+  const isAuthenticating = useStore(state => state.isAuthenticating);
+  return <RouterProvider router={router} context={{ isAuthenticating }} />;
 }

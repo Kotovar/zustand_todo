@@ -1,9 +1,8 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/tasks')({
-  component: undefined,
   beforeLoad: async ({ context, location }) => {
-    if (!context.auth) {
+    if (!context.isAuthenticating) {
       throw redirect({
         to: '/signin',
       });

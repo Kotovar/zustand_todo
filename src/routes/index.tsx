@@ -5,7 +5,7 @@ import { Home } from '../pages/Home';
 export const Route = createFileRoute('/')({
   component: Home,
   beforeLoad: async ({ context, location }) => {
-    if (context.auth) {
+    if (context.isAuthenticating) {
       throw redirect({
         to: '/myday',
         search: {
