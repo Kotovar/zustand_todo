@@ -1,7 +1,12 @@
-import "./App.css";
+import { RouterProvider } from '@tanstack/react-router';
 
-function App() {
-  return <h1>Hello todo</h1>;
+import { router } from './router';
+
+function InnerApp() {
+  const auth = true;
+  return <RouterProvider router={router} context={{ auth }} />;
 }
 
-export default App;
+export function App() {
+  return <InnerApp />;
+}
