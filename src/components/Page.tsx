@@ -6,11 +6,10 @@ import { Slider } from './Slider';
 
 export const Page = () => {
   const isAuthenticating = useStore(state => state.isAuthenticating);
-  const logout = useStore(state => state.logOut);
 
   return (
     <div>
-      <Header isAuthenticating={isAuthenticating} logout={logout} />
+      <Header isAuthenticating={isAuthenticating} />
       <Slider isAuthenticating={isAuthenticating} />
       <main>
         <Outlet />

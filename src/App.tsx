@@ -9,6 +9,12 @@ import { RouterProvider } from '@tanstack/react-router';
 import { router } from './router';
 import { useStore } from './store/store';
 
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router;
+  }
+}
+
 export function App() {
   const isAuthenticating = useStore(state => state.isAuthenticating);
   return <RouterProvider router={router} context={{ isAuthenticating }} />;

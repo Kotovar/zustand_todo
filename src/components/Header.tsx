@@ -1,13 +1,16 @@
 import { Link } from '@tanstack/react-router';
 
+import { useAuth } from '../utils/useAuth';
+
 interface Props {
   isAuthenticating: boolean;
-  logout: () => void;
 }
 
-export const Header = ({ isAuthenticating, logout }: Props) => {
+export const Header = ({ isAuthenticating }: Props) => {
+  const { handleLogout } = useAuth();
+
   const container = isAuthenticating ? (
-    <button onClick={logout}>Sign Out</button>
+    <button onClick={handleLogout}>Sign Out</button>
   ) : (
     <>
       <Link to='/signin'>Sign In</Link>
