@@ -4,13 +4,10 @@ import { Home } from '../pages/Home';
 
 export const Route = createFileRoute('/')({
   component: Home,
-  beforeLoad: async ({ context, location }) => {
+  beforeLoad: async ({ context }) => {
     if (context.isAuthenticating) {
       throw redirect({
         to: '/myday',
-        search: {
-          redirect: location.href,
-        },
       });
     }
   },

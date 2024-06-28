@@ -11,21 +11,17 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as TasksImport } from './routes/tasks'
 import { Route as SignupImport } from './routes/signup'
 import { Route as SigninImport } from './routes/signin'
-import { Route as MydayImport } from './routes/myday'
+import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as IndexImport } from './routes/index'
-import { Route as TasksIdImport } from './routes/tasks.id'
-import { Route as TasksTaskIdImport } from './routes/tasks.$taskId'
-import { Route as TasksIdTaskIdImport } from './routes/tasks.id.$taskId'
+import { Route as AuthenticatedTasksImport } from './routes/_authenticated/tasks'
+import { Route as AuthenticatedMydayImport } from './routes/_authenticated/myday'
+import { Route as AuthenticatedTasksIdImport } from './routes/_authenticated/tasks.id'
+import { Route as AuthenticatedTasksTaskIdImport } from './routes/_authenticated/tasks.$taskId'
+import { Route as AuthenticatedTasksIdTaskIdImport } from './routes/_authenticated/tasks.id.$taskId'
 
 // Create/Update Routes
-
-const TasksRoute = TasksImport.update({
-  path: '/tasks',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const SignupRoute = SignupImport.update({
   path: '/signup',
@@ -37,8 +33,8 @@ const SigninRoute = SigninImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const MydayRoute = MydayImport.update({
-  path: '/myday',
+const AuthenticatedRoute = AuthenticatedImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -47,20 +43,32 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const TasksIdRoute = TasksIdImport.update({
+const AuthenticatedTasksRoute = AuthenticatedTasksImport.update({
+  path: '/tasks',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedMydayRoute = AuthenticatedMydayImport.update({
+  path: '/myday',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedTasksIdRoute = AuthenticatedTasksIdImport.update({
   path: '/id',
-  getParentRoute: () => TasksRoute,
+  getParentRoute: () => AuthenticatedTasksRoute,
 } as any)
 
-const TasksTaskIdRoute = TasksTaskIdImport.update({
+const AuthenticatedTasksTaskIdRoute = AuthenticatedTasksTaskIdImport.update({
   path: '/$taskId',
-  getParentRoute: () => TasksRoute,
+  getParentRoute: () => AuthenticatedTasksRoute,
 } as any)
 
-const TasksIdTaskIdRoute = TasksIdTaskIdImport.update({
-  path: '/$taskId',
-  getParentRoute: () => TasksIdRoute,
-} as any)
+const AuthenticatedTasksIdTaskIdRoute = AuthenticatedTasksIdTaskIdImport.update(
+  {
+    path: '/$taskId',
+    getParentRoute: () => AuthenticatedTasksIdRoute,
+  } as any,
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -73,11 +81,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/myday': {
-      id: '/myday'
-      path: '/myday'
-      fullPath: '/myday'
-      preLoaderRoute: typeof MydayImport
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedImport
       parentRoute: typeof rootRoute
     }
     '/signin': {
@@ -94,33 +102,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupImport
       parentRoute: typeof rootRoute
     }
-    '/tasks': {
-      id: '/tasks'
+    '/_authenticated/myday': {
+      id: '/_authenticated/myday'
+      path: '/myday'
+      fullPath: '/myday'
+      preLoaderRoute: typeof AuthenticatedMydayImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/tasks': {
+      id: '/_authenticated/tasks'
       path: '/tasks'
       fullPath: '/tasks'
-      preLoaderRoute: typeof TasksImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthenticatedTasksImport
+      parentRoute: typeof AuthenticatedImport
     }
-    '/tasks/$taskId': {
-      id: '/tasks/$taskId'
+    '/_authenticated/tasks/$taskId': {
+      id: '/_authenticated/tasks/$taskId'
       path: '/$taskId'
       fullPath: '/tasks/$taskId'
-      preLoaderRoute: typeof TasksTaskIdImport
-      parentRoute: typeof TasksImport
+      preLoaderRoute: typeof AuthenticatedTasksTaskIdImport
+      parentRoute: typeof AuthenticatedTasksImport
     }
-    '/tasks/id': {
-      id: '/tasks/id'
+    '/_authenticated/tasks/id': {
+      id: '/_authenticated/tasks/id'
       path: '/id'
       fullPath: '/tasks/id'
-      preLoaderRoute: typeof TasksIdImport
-      parentRoute: typeof TasksImport
+      preLoaderRoute: typeof AuthenticatedTasksIdImport
+      parentRoute: typeof AuthenticatedTasksImport
     }
-    '/tasks/id/$taskId': {
-      id: '/tasks/id/$taskId'
+    '/_authenticated/tasks/id/$taskId': {
+      id: '/_authenticated/tasks/id/$taskId'
       path: '/$taskId'
       fullPath: '/tasks/id/$taskId'
-      preLoaderRoute: typeof TasksIdTaskIdImport
-      parentRoute: typeof TasksIdImport
+      preLoaderRoute: typeof AuthenticatedTasksIdTaskIdImport
+      parentRoute: typeof AuthenticatedTasksIdImport
     }
   }
 }
@@ -129,13 +144,17 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
-  MydayRoute,
+  AuthenticatedRoute: AuthenticatedRoute.addChildren({
+    AuthenticatedMydayRoute,
+    AuthenticatedTasksRoute: AuthenticatedTasksRoute.addChildren({
+      AuthenticatedTasksTaskIdRoute,
+      AuthenticatedTasksIdRoute: AuthenticatedTasksIdRoute.addChildren({
+        AuthenticatedTasksIdTaskIdRoute,
+      }),
+    }),
+  }),
   SigninRoute,
   SignupRoute,
-  TasksRoute: TasksRoute.addChildren({
-    TasksTaskIdRoute,
-    TasksIdRoute: TasksIdRoute.addChildren({ TasksIdTaskIdRoute }),
-  }),
 })
 
 /* prettier-ignore-end */
@@ -147,17 +166,20 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/myday",
+        "/_authenticated",
         "/signin",
-        "/signup",
-        "/tasks"
+        "/signup"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/myday": {
-      "filePath": "myday.tsx"
+    "/_authenticated": {
+      "filePath": "_authenticated.tsx",
+      "children": [
+        "/_authenticated/myday",
+        "/_authenticated/tasks"
+      ]
     },
     "/signin": {
       "filePath": "signin.tsx"
@@ -165,27 +187,32 @@ export const routeTree = rootRoute.addChildren({
     "/signup": {
       "filePath": "signup.tsx"
     },
-    "/tasks": {
-      "filePath": "tasks.tsx",
+    "/_authenticated/myday": {
+      "filePath": "_authenticated/myday.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/tasks": {
+      "filePath": "_authenticated/tasks.tsx",
+      "parent": "/_authenticated",
       "children": [
-        "/tasks/$taskId",
-        "/tasks/id"
+        "/_authenticated/tasks/$taskId",
+        "/_authenticated/tasks/id"
       ]
     },
-    "/tasks/$taskId": {
-      "filePath": "tasks.$taskId.tsx",
-      "parent": "/tasks"
+    "/_authenticated/tasks/$taskId": {
+      "filePath": "_authenticated/tasks.$taskId.tsx",
+      "parent": "/_authenticated/tasks"
     },
-    "/tasks/id": {
-      "filePath": "tasks.id.tsx",
-      "parent": "/tasks",
+    "/_authenticated/tasks/id": {
+      "filePath": "_authenticated/tasks.id.tsx",
+      "parent": "/_authenticated/tasks",
       "children": [
-        "/tasks/id/$taskId"
+        "/_authenticated/tasks/id/$taskId"
       ]
     },
-    "/tasks/id/$taskId": {
-      "filePath": "tasks.id.$taskId.tsx",
-      "parent": "/tasks/id"
+    "/_authenticated/tasks/id/$taskId": {
+      "filePath": "_authenticated/tasks.id.$taskId.tsx",
+      "parent": "/_authenticated/tasks/id"
     }
   }
 }

@@ -1,22 +1,12 @@
-import { useStore } from '../store/store';
+import { useAuth } from '../utils/useAuth';
 
 export function SignIn() {
-  const updateUser = useStore(state => state.logIn);
+  const { handleSignIn } = useAuth();
 
   return (
-    <>
+    <main>
       <div>Sign In</div>
-      <button
-        onClick={() =>
-          updateUser({
-            uid: '423',
-            notepads: ['423'],
-            tasks: ['423'],
-          })
-        }
-      >
-        Sign In
-      </button>
-    </>
+      <button onClick={handleSignIn}>Sign In</button>
+    </main>
   );
 }

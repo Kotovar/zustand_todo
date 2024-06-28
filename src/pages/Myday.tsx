@@ -1,3 +1,3 @@
 export function MyDay() {
-  return <h1>Today is...</h1>;
+  return <div>Today is...</div>;
 }
