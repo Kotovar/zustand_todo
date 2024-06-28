@@ -6,7 +6,7 @@ import type { StoreState } from '../types/types';
 export const useStore = create<StoreState>()(
   devtools(set => ({
     user: null,
-    isAuthenticating: true,
+    isAuthenticating: false,
     error: null,
     logIn: user =>
       set({

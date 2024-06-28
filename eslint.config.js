@@ -18,6 +18,7 @@ export default tslint.config(
       'no-console': 'error',
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
+      '@typescript-eslint/no-empty-function': 'off',
     },
   },
   {

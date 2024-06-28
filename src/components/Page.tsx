@@ -8,12 +8,11 @@ export const Page = () => {
   const isAuthenticating = useStore(state => state.isAuthenticating);
 
   return (
-    <div>
+    <>
       <Header isAuthenticating={isAuthenticating} />
       <Slider isAuthenticating={isAuthenticating} />
-      <main>
-        <Outlet />
-      </main>
-    </div>
+
+      <Outlet />
+    </>
   );
 };
